@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Manager</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap");
+        * {
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+}
+
+header {
+  display: flex;
+  background-color: #f7f9f9;
+  width: auto;
+  height: 120px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  height: 40%;
+  align-items: center;
+  justify-content: center;
+  background-color: #1c6758;
+  color: white;
+  letter-spacing: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  height: 60%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.nav-logo {
+  width: 50px;
+  height: auto;
+}
+
+.menu-nav li {
+  display: inline-block;
+  padding: 0 40px;
+}
+
+.menu-nav a {
+  color: #3d8361;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.menu-nav li:hover {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 5px;
+}
+        .data-table {
+  padding: 40px 80px;
+}
+
+.title2 {
+  font-family: "Nunito", sans-serif;
+  letter-spacing: 5px;
+  font-size: 25px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+table,
+thead,
+td,
+tr {
+  border: 1px solid;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+tr td {
+  padding: 10px;
+}
+
+.delete {
+  text-decoration-line: underline;
+  color: blue;
+}
+
+.kidung-lagu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.drop-container {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px dashed #555;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
+}
+
+.drop-container:hover {
+  background: #eee;
+  border-color: #111;
+}
+
+.drop-container:hover .drop-title {
+  color: #222;
+}
+
+.drop-title {
+  color: #444;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: color 0.2s ease-in-out;
+}
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="title">ADMIN GPIB JAKARTA</h1>
+    <nav>
+        <img class="nav-logo" src="img/logo gpib.png" alt="" />
+        <div class="menu-nav">
+            <li><a href="kidung-lagu">Kidung Lagu</a></li>
+            <li><a th:href="@{/user}">User</a></li>
+<!--            <li><a th:href="@{/user}">User</a></li>-->
+            <li><a href="tata-ibadah">Tata Ibadah</a></li>
+            <li><a href="youtube">Youtube</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" class="btn btn-info" value="Logout" />
+                </form>
+            </li>
+
+        </div>
+    </nav>
+</header>
+
+    <div style="display:none;" class="row border rounded m-3 p-3">
+        <th:block th:each="doc : ${listDocs}">
+<!--            <div class="col">-->
+<!--                <img th:src="@{/static/document.png}" width="50" />-->
+<!--            </div>-->
+            <div>
+                <a th:href="@{'/download?id=' +${doc.id}}">[[${doc.name}]]</a>
+            </div>
+            <div>
+                ([[${#numbers.formatInteger(doc.size, 4, 'COMMA')}]] bytes)
+            </div>
+        </th:block>
+    </div>
+
+
+<!--    <form th:action="@{/upload}" method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto">-->
+
+<!--        <div class="border rounded m-3">-->
+
+<!--            <h2>Upload your files:</h2>-->
+<!--            <p>-->
+<!--                <input type="file" name="document" required/>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                <input type="submit" value="Upload" class="btn btn-primary">-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </form>-->
+
+    <section class="data-table">
+        <h1 class="title2">Kidung Lagu</h1>
+        <div class="kidung-lagu">
+            <div class="upload-file-box">
+                <form class="form-kidung" th:action="@{/upload}" method="post" enctype="multipart/form-data">
+
+                <label class="drop-container" id="dropcontainer">
+                    <span class="drop-title">Upload Kidung Lagu</span>
+                    <p>
+                        <input type="file" name="document" required/>
+                    </p>
+                    <p>
+                        <input type="submit" value="Upload" class="btn btn-primary">
+                    </p>
+                </label>
+                </form>
+
+                <div class="text-success">
+                    <h3>[[${message}]]</h3>
+                </div>
+            </div>
+            <table>
+                <thead>
+                <td>No</td>
+                <td>Size</td>
+                <td>File</td>
+                <td>Action</td>
+                </thead>
+                <th:block th:each="doc : ${listDocs}">
+                    <tr>
+                        <td>[[${doc.id}]]</td>
+                        <td>([[${#numbers.formatInteger(doc.size, 4, 'COMMA')}]] bytes)</td>
+                        <td><a  th:href="@{'/download?id=' +${doc.id}}">[[${doc.name}]]</a></td>
+                        <td><a th:href="@{/delete/{id}(id=${doc.id})}">Hapus</a></td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+    </section>
+<script>
+    document.getElementByClass("form-kidung").addEventListener("submit", function(event){
+  event.preventDefault()
+});
+</script>
+</body>
+</html>
+
